@@ -11,7 +11,7 @@ from sklearn.preprocessing import OneHotEncoder,StandardScaler
 
 from src.logger import logging
 from src.exception import CustomException
-from utils import save_object
+from src.utils import save_object
 
 @dataclass
 class DataTransformationConfig:
@@ -37,7 +37,7 @@ class DataTransformation:
             ]
             num_pipeline = Pipeline(
                 steps=[
-                    ("imputer", SimpleImputer(strategy="median"))
+                    ("imputer", SimpleImputer(strategy="median")),
                     ("scaler", StandardScaler())
 
                 ]
@@ -45,9 +45,9 @@ class DataTransformation:
 
             cat_pipeline = Pipeline(
                 steps=[
-                    ("imputer", SimpleImputer(strategy="most_frequent"))
-                    ("one_hot_encoder", OneHotEncoder())
-                    ("scaler", StandardScaler())
+                    ("imputer", SimpleImputer(strategy="most_frequent")),
+                    ("one_hot_encoder", OneHotEncoder()),
+                    ("scaler", StandardScaler(with_mean=False))
 
                 ]
             )
@@ -58,9 +58,10 @@ class DataTransformation:
 
             preprocesser = ColumnTransformer(
                 [
-                    ("num_pipeline",num_pipeline,numerical_columns)
-                    ("cat_pipeline",cat_pipeline,categorical_columns)
+                    ("num_pipeline",num_pipeline,numerical_columns),
+                    ("cat_pipelines",cat_pipeline,categorical_columns)
                 ]
+                
 
             )
 
